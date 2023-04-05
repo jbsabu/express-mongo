@@ -66,9 +66,13 @@ export async function deletePlant(req,res){
 export async function updatePlant (req,res){
   const docId = {"_id": new ObjectId (req.params.docId)}
   const updatePlant = req.body;
+  const updateFilter = {$set:undefined}
+  updateFilter["$set"] = updatePlant
+  console.log(updateFilter)
+
   await coll.updateOne(
-    {"_id": docId},{$set:{updatePlant}}
-  );
-  res.status(201).send({message: "plant has been updated"})
-  .then(res.send({message: "document has been updated"}))
+    {"_id": docId},updateFilter
+  )
+  .then(updated => res.send({message: "document has been updated"}))
+  .catch(err => res.status(500).send(err))
 }
